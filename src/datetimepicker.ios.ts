@@ -145,32 +145,16 @@ export class DateTimePicker extends DateTimePickerBase {
     }
 
     static _showNativeDialog(nativeDialog: UIAlertController, nativePicker: UIDatePicker, style: DateTimePickerStyle) {
-        let currentPage = getCurrentPage();
-        if (currentPage) {
-            let view: View = currentPage;
-            let viewController: UIViewController = currentPage.ios;
-
-            if (currentPage.modal) {
-                view = currentPage.modal;
-
-                if (view.ios instanceof UIViewController) {
-                    viewController = view.ios;
-                } else {
-                    const parentWithController = iosView.getParentWithViewController(view);
-                    viewController = parentWithController ? parentWithController.viewController : undefined;
-                }
+        const rootViewController = UIApplication.sharedApplication.keyWindow.rootrootViewController;
+        if (rootViewController) {
+            if (nativeDialog.popoverPresentationController) {
+                nativeDialog.popoverPresentationController.sourceView = rootViewController.view;
+                nativeDialog.popoverPresentationController.sourceRect = CGRectMake(rootViewController.view.bounds.size.width / 2.0, rootViewController.view.bounds.size.height / 2.0, 1.0, 1.0);
+                nativeDialog.popoverPresentationController.permittedArrowDirections = 0;
             }
 
-            if (viewController) {
-                if (nativeDialog.popoverPresentationController) {
-                    nativeDialog.popoverPresentationController.sourceView = viewController.view;
-                    nativeDialog.popoverPresentationController.sourceRect = CGRectMake(viewController.view.bounds.size.width / 2.0, viewController.view.bounds.size.height / 2.0, 1.0, 1.0);
-                    nativeDialog.popoverPresentationController.permittedArrowDirections = 0;
-                }
-
-                viewController.presentViewControllerAnimatedCompletion(nativeDialog, true, () => {
-                });
-            }
+            rootViewController.presentViewControllerAnimatedCompletion(nativeDialog, true, () => {
+            });
         }
     }
 
