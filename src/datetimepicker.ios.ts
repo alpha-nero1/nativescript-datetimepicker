@@ -145,7 +145,7 @@ export class DateTimePicker extends DateTimePickerBase {
     }
 
     static _showNativeDialog(nativeDialog: UIAlertController, nativePicker: UIDatePicker, style: DateTimePickerStyle) {
-        const rootViewController = UIApplication.sharedApplication.keyWindow.rootrootViewController;
+        const rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
         if (rootViewController) {
             if (nativeDialog.popoverPresentationController) {
                 nativeDialog.popoverPresentationController.sourceView = rootViewController.view;

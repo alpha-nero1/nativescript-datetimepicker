@@ -1,8 +1,8 @@
 .vscode/
 .idea/
 node_modules/
-*.js
-*.js.map
+!*.js
+!*.js.map
 *.esm.json
 *.tns.json
 *.metadata.json
