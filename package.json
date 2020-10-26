@@ -27,7 +27,7 @@
     "clean": "npm run demo.reset && npx rimraf -- node_modules package-lock.json && npm i",
     "ci.tslint": "npm i && tslint '**/*.ts' --config '../tslint.json' --exclude '**/node_modules/**' --exclude '**/platforms/**'",
     "ngc": "ngc -p tsconfig.json",
-    "prepack": "npm i && npm run ngc",
+    "prepack": "cd src && npm i && npm run ngc",
     "pack": "bash ../publish/pack.sh"
   },
   "keywords": [
