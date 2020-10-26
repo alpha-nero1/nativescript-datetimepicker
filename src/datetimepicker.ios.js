@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var color_1 = require("tns-core-modules/color");
+var view_1 = require("tns-core-modules/ui/core/view");
 var platform_1 = require("tns-core-modules/platform");
 var datetimepicker_common_1 = require("./datetimepicker.common");
 var localization_utils_1 = require("./utils/localization-utils");
@@ -128,15 +129,29 @@ var DateTimePicker = (function (_super) {
         return alertController;
     };
     DateTimePicker._showNativeDialog = function (nativeDialog, nativePicker, style) {
-        var rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
-        if (rootViewController) {
-            if (nativeDialog.popoverPresentationController) {
-                nativeDialog.popoverPresentationController.sourceView = rootViewController.view;
-                nativeDialog.popoverPresentationController.sourceRect = CGRectMake(rootViewController.view.bounds.size.width / 2.0, rootViewController.view.bounds.size.height / 2.0, 1.0, 1.0);
-                nativeDialog.popoverPresentationController.permittedArrowDirections = 0;
+        var currentPage = datetimepicker_common_1.getCurrentPage();
+        if (currentPage) {
+            var view = currentPage;
+            var viewController = currentPage.ios;
+            if (currentPage.modal) {
+                view = currentPage.modal;
+                if (view.ios instanceof UIViewController) {
+                    viewController = view.ios;
+                }
+                else {
+                    var parentWithController = view_1.ios.getParentWithViewController(view);
+                    viewController = parentWithController ? parentWithController.viewController : undefined;
+                }
             }
-            rootViewController.presentViewControllerAnimatedCompletion(nativeDialog, true, function () {
-            });
+            if (viewController) {
+                if (nativeDialog.popoverPresentationController) {
+                    nativeDialog.popoverPresentationController.sourceView = viewController.view;
+                    nativeDialog.popoverPresentationController.sourceRect = CGRectMake(viewController.view.bounds.size.width / 2.0, viewController.view.bounds.size.height / 2.0, 1.0, 1.0);
+                    nativeDialog.popoverPresentationController.permittedArrowDirections = 0;
+                }
+                UIApplication.sharedApplication.keyWindow.rootViewController.presentViewControllerAnimatedCompletion(nativeDialog, true, function () {
+                });
+            }
         }
     };
     DateTimePicker._applyDialogTitleTextColor = function (nativeDialog, color) {
